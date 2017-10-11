@@ -1,6 +1,21 @@
 @weeks_in_month = 5.333
 @weeks_in_year = 52.18
 
+mdlive_gross_annual_income = # your income
+
+mdlive_biweekly_HSA = 26.40
+mdlive_biweekly_dental = 8.67
+
+rent_monthly_expense = 1500.00
+
+cable_monthly_bill = 110.00
+electricity_monthly_bill = 100.00
+gas_monthly_bill = 0.00
+
+groceries_weekly_expense = 100.00
+
+savings_rate = 0.40 # percent to decimal
+
 def weekly(annual)
   (annual / @weeks_in_year).round(2)
 end
@@ -21,7 +36,6 @@ def taxed_annual_income(gross_annual_income, annual_taxes)
   gross_annual_income - annual_taxes
 end
 
-mdlive_gross_annual_income = 57000.00
 mdlive_gross_weekly_income = weekly(mdlive_gross_annual_income)
 mdlive_gross_biweekly_income = biweekly(mdlive_gross_annual_income)
 mdlive_gross_monthly_income = monthly(mdlive_gross_annual_income)
@@ -71,8 +85,6 @@ mdlive_annual_matched_401k = mdlive_annual_401k + mdlive_gross_annual_income * 0
 mdlive_annual_roth_401k = mdlive_taxed_annual_income * 0.05
 mdlive_annual_roth_matched_401k = mdlive_annual_roth_401k + mdlive_taxed_annual_income * 0.04
 
-mdlive_biweekly_HSA = 26.40
-mdlive_biweekly_dental = 8.67
 mdlive_biweekly_benefits = mdlive_biweekly_dental + mdlive_biweekly_HSA
 mdlive_annual_benefits = (mdlive_biweekly_benefits * @weeks_in_year / 2).round(2)
 
@@ -94,16 +106,11 @@ mdlive_annual_benefits = (mdlive_biweekly_benefits * @weeks_in_year / 2).round(2
 # combined_taxed_annual_monthly_income = taxed_annual_income/12
 # combined_taxed_annual_weekly_income = taxed_annual_income/@weeks_in_year
 
-cable_monthly_bill = 110.00
-electricity_monthly_bill = 100.00
-gas_monthly_bill = 0.00
 utilities_monthly_expense = cable_monthly_bill + electricity_monthly_bill + gas_monthly_bill
 utilities_annual_expense = utilities_monthly_expense * 12
 
-rent_monthly_expense = 1500.00
 rent_annual_expense = rent_monthly_expense * 12
 
-groceries_weekly_expense = 100.00
 groceries_annual_expense = groceries_weekly_expense * @weeks_in_year
 
 annual_expenses = rent_annual_expense + utilities_annual_expense + groceries_annual_expense
@@ -116,7 +123,6 @@ net_monthly_income = monthly(net_annual_income)
 net_biweekly_income = biweekly(net_annual_income)
 net_weekly_income = weekly(net_annual_income)
 
-savings_rate = 0.40
 annual_savings = (net_annual_income * savings_rate).round(2)
 monthly_savings = monthly(annual_savings)
 biweekly_savings = biweekly(annual_savings)
