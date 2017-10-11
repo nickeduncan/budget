@@ -1,10 +1,11 @@
 @weeks_in_month = 5.333
 @weeks_in_year = 52.18
 
-mdlive_gross_annual_income = # your income
+mdlive_gross_annual_income = 57000.00 # your income
 
 mdlive_biweekly_HSA = 26.40
 mdlive_biweekly_dental = 8.67
+percentage_401k_contribution = 0.05 # percent to decimal
 
 rent_monthly_expense = 1500.00
 
@@ -80,10 +81,18 @@ mdlive_taxed_monthly_income = monthly(mdlive_taxed_annual_income)
 mdlive_taxed_weekly_income = weekly(mdlive_taxed_annual_income)
 mdlive_taxed_biweekly_income = biweekly(mdlive_taxed_annual_income)
 
-mdlive_annual_401k = mdlive_gross_annual_income * 0.05
-mdlive_annual_matched_401k = mdlive_annual_401k + mdlive_gross_annual_income * 0.04
-mdlive_annual_roth_401k = mdlive_taxed_annual_income * 0.05
-mdlive_annual_roth_matched_401k = mdlive_annual_roth_401k + mdlive_taxed_annual_income * 0.04
+percentage_401k_match = if (percentage_401k_contribution >= 0.05)
+  0.04
+elsif (percentage_401k_contribution > 0.03)
+  0.03 + (percentage_401k_contribution - 0.03) / 2
+else
+  percentage_401k_contribution
+end
+
+mdlive_annual_401k = mdlive_gross_annual_income * percentage_401k_contribution
+mdlive_annual_matched_401k = mdlive_annual_401k + mdlive_gross_annual_income * percentage_401k_match
+mdlive_annual_roth_401k = mdlive_taxed_annual_income * percentage_401k_contribution
+mdlive_annual_roth_matched_401k = mdlive_annual_roth_401k + mdlive_taxed_annual_income * percentage_401k_match
 
 mdlive_biweekly_benefits = mdlive_biweekly_dental + mdlive_biweekly_HSA
 mdlive_annual_benefits = (mdlive_biweekly_benefits * @weeks_in_year / 2).round(2)
