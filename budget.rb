@@ -1,10 +1,6 @@
 @weeks_in_month = 5.333
 @weeks_in_year = 52.18
 
-@tax_bracket_floor = 37950.00
-@tax_rate = 0.25
-@tax_bracket_base = 5226.00
-
 def weekly(annual)
   (annual / @weeks_in_year).round(2)
 end
@@ -18,7 +14,7 @@ def monthly(annual)
 end
 
 def annual_taxes(gross_annual_income)
-  gross_annual_income * @tax_rate - @tax_bracket_base
+  (gross_annual_income - @tax_bracket_floor) * @tax_rate + @tax_bracket_base
 end
 
 def taxed_annual_income(gross_annual_income, annual_taxes)
@@ -29,6 +25,40 @@ mdlive_gross_annual_income = 57000.00
 mdlive_gross_weekly_income = weekly(mdlive_gross_annual_income)
 mdlive_gross_biweekly_income = biweekly(mdlive_gross_annual_income)
 mdlive_gross_monthly_income = monthly(mdlive_gross_annual_income)
+
+
+case mdlive_gross_annual_income
+when 0..9325.00
+  @tax_rate = 0.10
+  @tax_bracket_base = 0.00
+  @tax_bracket_floor = 0.00
+when 9325.00..37950.00
+  @tax_rate = 0.15
+  @tax_bracket_base = 932.50
+  @tax_bracket_floor = 9325.00
+when 37950.00..91900.00
+  @tax_rate = 0.25
+  @tax_bracket_base = 5226.25
+  @tax_bracket_floor = 37950.00
+when 91900.00..191650.00
+  @tax_rate = 0.28
+  @tax_bracket_base = 18713.75
+  @tax_bracket_floor = 91900.00
+when 191650.00..416700.00
+  @tax_rate = 0.33
+  @tax_bracket_base = 46643.75
+  @tax_bracket_floor = 191650.00
+when 416700.00..416700.00
+  @tax_rate = 0.35
+  @tax_bracket_base = 120910.25
+  @tax_bracket_floor = 416700.00
+when 416700.00..100000000
+  @tax_rate = 0.3960
+  @tax_bracket_base = 121505.25
+  @tax_bracket_floor = 418400.00
+else
+  puts("tax calculation error")
+end
 
 mdlive_annual_taxes = annual_taxes(mdlive_gross_annual_income)
 mdlive_taxed_annual_income = taxed_annual_income(mdlive_gross_annual_income, mdlive_annual_taxes)
@@ -81,7 +111,7 @@ monthly_expenses = monthly(annual_expenses)
 biweekly_expenses = biweekly(annual_expenses)
 weekly_expenses = weekly(annual_expenses)
 
-net_annual_income = mdlive_taxed_annual_income - annual_expenses - mdlive_annual_roth_401k - mdlive_annual_benefits
+net_annual_income = (mdlive_taxed_annual_income - annual_expenses - mdlive_annual_roth_401k - mdlive_annual_benefits).round(2)
 net_monthly_income = monthly(net_annual_income)
 net_biweekly_income = biweekly(net_annual_income)
 net_weekly_income = weekly(net_annual_income)
