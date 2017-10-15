@@ -1,7 +1,7 @@
 @weeks_in_month = 5.333
 @weeks_in_year = 52.18
 
-mdlive_gross_annual_income = 57000.00 # your income
+mdlive_gross_annual_income = 57189.28 # your income
 
 mdlive_biweekly_HSA = 26.40
 mdlive_biweekly_dental = 8.67
@@ -76,6 +76,8 @@ else
 end
 
 mdlive_annual_taxes = annual_taxes(mdlive_gross_annual_income)
+mdlive_biweekly_taxes = biweekly(mdlive_annual_taxes)
+
 mdlive_taxed_annual_income = taxed_annual_income(mdlive_gross_annual_income, mdlive_annual_taxes)
 mdlive_taxed_monthly_income = monthly(mdlive_taxed_annual_income)
 mdlive_taxed_weekly_income = weekly(mdlive_taxed_annual_income)
@@ -93,9 +95,15 @@ mdlive_annual_401k = mdlive_gross_annual_income * percentage_401k_contribution
 mdlive_annual_matched_401k = mdlive_annual_401k + mdlive_gross_annual_income * percentage_401k_match
 mdlive_annual_roth_401k = mdlive_taxed_annual_income * percentage_401k_contribution
 mdlive_annual_roth_matched_401k = mdlive_annual_roth_401k + mdlive_taxed_annual_income * percentage_401k_match
+mdlive_biweekly_roth_401k = biweekly(mdlive_annual_roth_401k)
 
 mdlive_biweekly_benefits = mdlive_biweekly_dental + mdlive_biweekly_HSA
 mdlive_annual_benefits = (mdlive_biweekly_benefits * @weeks_in_year / 2).round(2)
+
+post_benefit_annual_income = mdlive_taxed_annual_income - mdlive_annual_benefits - mdlive_annual_roth_401k
+post_benefit_monthly_income = monthly(post_benefit_annual_income)
+post_benefit_weekly_income = weekly(post_benefit_annual_income)
+post_benefit_biweekly_income = biweekly(post_benefit_annual_income)
 
 # incruises_hourly_rate = 20.00
 # incruises_fulltime_weekly_hours = 40
@@ -127,7 +135,7 @@ monthly_expenses = monthly(annual_expenses)
 biweekly_expenses = biweekly(annual_expenses)
 weekly_expenses = weekly(annual_expenses)
 
-net_annual_income = (mdlive_taxed_annual_income - annual_expenses - mdlive_annual_roth_401k - mdlive_annual_benefits).round(2)
+net_annual_income = (post_benefit_annual_income - annual_expenses - mdlive_annual_benefits).round(2)
 net_monthly_income = monthly(net_annual_income)
 net_biweekly_income = biweekly(net_annual_income)
 net_weekly_income = weekly(net_annual_income)
@@ -151,10 +159,17 @@ puts("Gross Biweekly Income: #{mdlive_gross_biweekly_income}")
 puts("Gross Weekly Income: #{mdlive_gross_weekly_income}\n\n")
 
 puts("Taxes: #{mdlive_annual_taxes}\n\n")
+puts("Biweekly Taxes: #{mdlive_biweekly_taxes}\n")
+
 puts("Taxed Income: #{mdlive_taxed_annual_income}")
 puts("Taxed Monthly Income: #{mdlive_taxed_monthly_income}")
 puts("Taxed Biweekly Income: #{mdlive_taxed_biweekly_income}")
 puts("Taxed Weekly Income: #{mdlive_taxed_weekly_income}\n\n")
+
+puts("Post Benefit Income: #{post_benefit_annual_income}")
+puts("Post Benefit Monthly Income: #{post_benefit_monthly_income}")
+puts("Post Benefit Biweekly Income: #{post_benefit_biweekly_income}")
+puts("Post Benefit Weekly Income: #{post_benefit_weekly_income}\n\n")
 
 puts("Annual Expenses*: #{annual_expenses}")
 puts("Monthly Expenses: #{monthly_expenses}")
@@ -172,6 +187,7 @@ puts("Biweekly Savings: #{biweekly_savings}")
 puts("Weekly Savings: #{weekly_savings}\n\n")
 
 puts("Annual Roth 401k Contribution: #{mdlive_annual_roth_matched_401k}")
+puts("Biweekly Roth 401k Contribution: #{mdlive_biweekly_roth_401k}")
 puts("Total Standard 401k Balance: #{mdlive_annual_matched_401k / 3}\n\n")
 
 puts("Annual Disposable Income: #{annual_disposable_income}")
